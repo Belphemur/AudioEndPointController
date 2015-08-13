@@ -7,6 +7,7 @@
 
 
 #pragma once
+#include <mmeapi.h>
 
 
 interface DECLSPEC_UUID("f8679f50-850a-41cf-9c72-430f290290c8")

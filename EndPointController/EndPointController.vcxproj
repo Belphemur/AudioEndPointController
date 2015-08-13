@@ -91,10 +91,12 @@
     <None Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PolicyConfig.h" />
+    <ClCompile Include="EndPointController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EndPointController.cpp" />
+    <ProjectReference Include="..\Audio.EndPoint.Controller\Audio.EndPoint.Controller.vcxproj">
+      <Project>{a3f1b8e3-39cd-4b6f-9fe2-4ac26a811430}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

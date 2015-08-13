@@ -6,7 +6,9 @@
 // AUDIOENDPOINTCONTROLLER_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef AUDIOENDPOINTCONTROLLER_EXPORTS
-#define AUDIOENDPOINTCONTROLLER_API __declspec(dllexport)
+	#define AUDIOENDPOINTCONTROLLER_API __declspec(dllexport)
+	#define EXPIMP_TEMPLATE
 #else
-#define AUDIOENDPOINTCONTROLLER_API __declspec(dllimport)
+	#define AUDIOENDPOINTCONTROLLER_API __declspec(dllimport)
+	#define EXPIMP_TEMPLATE extern
 #endif

@@ -4,7 +4,6 @@
 #include <wchar.h>
 #include <tchar.h>
 #include <string>
-#include <iostream>
 #include "windows.h"
 #include "Mmdeviceapi.h"
 #include "Propidl.h"
@@ -13,18 +12,21 @@
 // Index, Device Friendly Name
 #define DEVICE_OUTPUT_FORMAT "Audio Device %d: %ws"
 #include "../Audio.EndPoint.Controller/Audio.EndPoint.Controller.h"
+#include <algorithm>
 
 void invalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file,
 	unsigned int line, uintptr_t pReserved);
+
+void printAudioDevice(AudioDevice device, LPCWSTR outFormat);
 // EndPointController.exe [NewDefaultDeviceID]
 int _tmain(int argc, LPCWSTR argv[])
 {
 	TGlobalState state;
+	auto option = 0; // 0 indicates list devices.
+	auto displayFormat = _T(DEVICE_OUTPUT_FORMAT);
 
 	// Process command line arguments
-	state.option = 0; // 0 indicates list devices.
 	state.strDefaultDeviceID = '\0';
-	state.pDeviceFormatStr = _T(DEVICE_OUTPUT_FORMAT);
 	state.deviceStateFilter = DEVICE_STATE_ACTIVE;
 
 	for (int i = 1; i < argc; i++) 
@@ -63,7 +65,7 @@ int _tmain(int argc, LPCWSTR argv[])
 		else if (wcscmp(argv[i], _T("-f")) == 0)
 		{
 			if ((argc - i) >= 2) {
-				state.pDeviceFormatStr = argv[++i];
+				displayFormat = argv[++i];
 				
 				// If printf is called with an invalid format string, jump to the invalidParameterHandler function.
 				_set_invalid_parameter_handler(invalidParameterHandler);
@@ -78,16 +80,56 @@ int _tmain(int argc, LPCWSTR argv[])
 		}
 	}
 	
-	if (argc == 2) state.option = _wtoi(argv[1]);
+	if (argc == 2) option = _wtoi(argv[1]);
 
 	state.hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	if (SUCCEEDED(state.hr))
 	{
-		createDeviceEnumerator(&state);
+		std::list<AudioDevice> devices;
+		createDeviceEnumerator(&state, &devices);
+		if(option < 1)
+		{
+			auto first = devices.begin();
+			auto last = devices.end();
+			while (first != last) {
+				printAudioDevice(*first, displayFormat);
+				++first;
+			}			
+		} else if( option <= static_cast<int>(state.nbDevices))
+		{
+			auto first = devices.begin();
+			auto last = devices.end();
+			while (first != last) {
+				if((*first).Index == option)
+				{
+					(*first).SetDefault();
+					break;
+				}
+				++first;
+			}
+		}
+		else
+		{
+			wprintf_s(_T("Error: No audio end-point device with the index '%d'.\n"), option);
+		}
 	}
 	return state.hr;
 }
 
+void printAudioDevice(AudioDevice device, LPCWSTR outFormat)
+{
+	wprintf_s(outFormat,
+		device.Index,
+		device.FriendlyName,
+		device.State,
+		device.IsDefault,
+		device.Description,
+		device.InterfaceFriendlyName,
+		device.Id
+		);
+	wprintf_s(_T("\n"));
+	fflush(stdout);
+}
 
 void invalidParameterHandler(const wchar_t* expression,
    const wchar_t* function, 

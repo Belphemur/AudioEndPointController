@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.EndPoint.Controller.h" />
+    <ClInclude Include="AudioDevice.h" />
     <ClInclude Include="ExportDll.h" />
     <ClInclude Include="PolicyConfig.h" />
     <ClInclude Include="stdafx.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.EndPoint.Controller.cpp" />
+    <ClCompile Include="AudioDevice.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

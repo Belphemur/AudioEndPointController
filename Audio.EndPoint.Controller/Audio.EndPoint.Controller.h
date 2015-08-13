@@ -1,22 +1,24 @@
 #include "ExportDll.h"
 #include <Mmdeviceapi.h>
 #include <string>
+#include <list>
+#include "AudioDevice.h"
 
 typedef struct TGlobalState
 {
 	HRESULT hr;
-	int option;
 	IMMDeviceEnumerator *pEnum;
 	IMMDeviceCollection *pDevices;
 	LPWSTR strDefaultDeviceID;
 	IMMDevice *pCurrentDevice;
-	LPCWSTR pDeviceFormatStr;
 	int deviceStateFilter;
+	UINT nbDevices;
 } TGlobalState;
 
-AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state);
-AUDIOENDPOINTCONTROLLER_API void prepareDeviceEnumerator(TGlobalState* state);
-AUDIOENDPOINTCONTROLLER_API void enumerateOutputDevices(TGlobalState* state);
-AUDIOENDPOINTCONTROLLER_API HRESULT printDeviceInfo(IMMDevice* pDevice, int index, LPCWSTR outFormat, LPWSTR strDefaultDeviceID);
-AUDIOENDPOINTCONTROLLER_API std::wstring getDeviceProperty(IPropertyStore* pStore, const PROPERTYKEY key);
-AUDIOENDPOINTCONTROLLER_API HRESULT SetDefaultAudioPlaybackDevice(LPCWSTR devID);
+AUDIOENDPOINTCONTROLLER_API std::list<AudioDevice> getAudioDevices();
+AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list);
+void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list);
+void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice> * list);
+std::wstring getDeviceProperty(IPropertyStore* pStore, const PROPERTYKEY key);
+HRESULT SetDefaultAudioPlaybackDevice(LPCWSTR devID);
+AudioDevice buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDeviceID);

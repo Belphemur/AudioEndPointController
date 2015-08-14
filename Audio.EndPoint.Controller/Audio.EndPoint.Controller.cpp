@@ -13,9 +13,9 @@ std::list<AudioDevice*>* getAudioDevices(int deviceFilter)
 	TGlobalState state;
 	state.hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	state.deviceStateFilter = deviceFilter;
-	std::list<AudioDevice*> list;
-	createDeviceEnumerator(&state, &list);
-	return &list;
+	auto list = new std::list<AudioDevice*>();
+	createDeviceEnumerator(&state, list);
+	return list;
 }
 
 AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list)

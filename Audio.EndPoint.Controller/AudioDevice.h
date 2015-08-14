@@ -1,6 +1,6 @@
 #pragma once 
 #include "ExportDll.h"
-#include <string>
+#include "stdafx.h"
 
 class AUDIOENDPOINTCONTROLLER_API AudioDevice
 {

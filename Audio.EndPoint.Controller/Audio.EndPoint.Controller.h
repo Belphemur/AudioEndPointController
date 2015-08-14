@@ -15,10 +15,10 @@ typedef struct TGlobalState
 	UINT nbDevices;
 } TGlobalState;
 
-AUDIOENDPOINTCONTROLLER_API std::list<AudioDevice> getAudioDevices(int deviceStateFilter);
-AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list);
-void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list);
-void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice> * list);
+std::list<AudioDevice*> getAudioDevices(int deviceStateFilter);
+AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list);
+void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list);
+void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice*> * list);
 std::wstring getDeviceProperty(IPropertyStore* pStore, const PROPERTYKEY key);
 HRESULT SetDefaultAudioPlaybackDevice(LPCWSTR devID);
-AudioDevice buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDeviceID);
+AudioDevice * buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDeviceID);

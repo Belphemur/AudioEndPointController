@@ -17,7 +17,7 @@
 void invalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file,
 	unsigned int line, uintptr_t pReserved);
 
-void printAudioDevice(AudioDevice device, LPCWSTR outFormat);
+void printAudioDevice(AudioDevice * device, LPCWSTR outFormat);
 // EndPointController.exe [NewDefaultDeviceID]
 int _tmain(int argc, LPCWSTR argv[])
 {
@@ -85,7 +85,7 @@ int _tmain(int argc, LPCWSTR argv[])
 	state.hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	if (SUCCEEDED(state.hr))
 	{
-		std::list<AudioDevice> devices;
+		std::list<AudioDevice*> devices;
 		createDeviceEnumerator(&state, &devices);
 		if(option < 1)
 		{
@@ -100,9 +100,9 @@ int _tmain(int argc, LPCWSTR argv[])
 			auto first = devices.begin();
 			auto last = devices.end();
 			while (first != last) {
-				if((*first).Index == option)
+				if((*first)->Index == option)
 				{
-					(*first).SetDefault();
+					(*first)->SetDefault();
 					break;
 				}
 				++first;
@@ -116,16 +116,16 @@ int _tmain(int argc, LPCWSTR argv[])
 	return state.hr;
 }
 
-void printAudioDevice(AudioDevice device, LPCWSTR outFormat)
+void printAudioDevice(AudioDevice * device, LPCWSTR outFormat)
 {
 	wprintf_s(outFormat,
-		device.Index,
-		device.FriendlyName,
-		device.State,
-		device.IsDefault,
-		device.Description,
-		device.InterfaceFriendlyName,
-		device.Id
+		device->Index,
+		device->FriendlyName,
+		device->State,
+		device->IsDefault,
+		device->Description,
+		device->InterfaceFriendlyName,
+		device->Id
 		);
 	wprintf_s(_T("\n"));
 	fflush(stdout);

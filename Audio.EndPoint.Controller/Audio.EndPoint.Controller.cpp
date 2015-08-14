@@ -8,17 +8,17 @@
 #include "Functiondiscoverykeys_devpkey.h"
 
 // Create a multimedia device enumerator.
-AUDIOENDPOINTCONTROLLER_API std::list<AudioDevice> getAudioDevices(int deviceFilter)
+std::list<AudioDevice*> getAudioDevices(int deviceFilter)
 {
 	TGlobalState state;
 	state.hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	state.deviceStateFilter = deviceFilter;
-	std::list<AudioDevice> list;
+	std::list<AudioDevice*> list;
 	createDeviceEnumerator(&state, &list);
 	return list;
 }
 
-AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list)
+AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list)
 {
 	state->pEnum = NULL;
 	state->hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator),
@@ -30,7 +30,7 @@ AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std
 }
 
 // Prepare the device enumerator
-void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list)
+void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list)
 {
 	state->hr = state->pEnum->EnumAudioEndpoints(eRender, state->deviceStateFilter, &state->pDevices);
 	if SUCCEEDED(state->hr)
@@ -40,7 +40,7 @@ void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice> * list)
 	state->pEnum->Release();
 }
 
-void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice> * list)
+void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice*> * list)
 {
 	state->pDevices->GetCount(&state->nbDevices);
 
@@ -59,7 +59,7 @@ void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice> * list)
 			if (SUCCEEDED(state->hr))
 			{
 				list->push_back(buildAudioDevice(state->pCurrentDevice, i,
-					state->strDefaultDeviceID));
+				                                 state->strDefaultDeviceID));
 				state->pCurrentDevice->Release();
 			}
 		}
@@ -69,14 +69,14 @@ void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice> * list)
 	state->pDevices->Release();
 }
 
-AudioDevice buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDeviceID)
+AudioDevice * buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDeviceID)
 {
 	// Device ID
 	LPWSTR strID = NULL;
 	HRESULT hr = pDevice->GetId(&strID);
 	if (!SUCCEEDED(hr))
 	{
-		return AudioDevice();
+		return nullptr;
 	}
 
 	bool deviceDefault = (strDefaultDeviceID != '\0' && (wcscmp(strDefaultDeviceID, strID) == 0));
@@ -86,12 +86,12 @@ AudioDevice buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDev
 	hr = pDevice->GetState(&dwState);
 	if (!SUCCEEDED(hr))
 	{
-		return AudioDevice();
+		return nullptr;
 	}
 
 	IPropertyStore *pStore;
 	hr = pDevice->OpenPropertyStore(STGM_READ, &pStore);
-	AudioDevice device;
+	AudioDevice* device = nullptr;
 	if (SUCCEEDED(hr))
 	{
 		std::wstring friendlyName = getDeviceProperty(pStore, PKEY_Device_FriendlyName);
@@ -100,7 +100,7 @@ AudioDevice buildAudioDevice(IMMDevice* pDevice, int index, LPWSTR strDefaultDev
 
 		if (SUCCEEDED(hr))
 		{
-			device = AudioDevice(index, friendlyName.c_str(), dwState, deviceDefault, Desc.c_str(), interfaceFriendlyName.c_str(), strID);
+			device = new AudioDevice(index, friendlyName.c_str(), dwState, deviceDefault, Desc.c_str(), interfaceFriendlyName.c_str(), strID);
 		}
 
 		pStore->Release();

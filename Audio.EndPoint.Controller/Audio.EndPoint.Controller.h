@@ -15,7 +15,7 @@ typedef struct TGlobalState
 	UINT nbDevices;
 } TGlobalState;
 
-std::list<AudioDevice*> getAudioDevices(int deviceStateFilter);
+std::list<AudioDevice*> * getAudioDevices(int deviceStateFilter);
 AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list);
 void prepareDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list);
 void enumerateOutputDevices(TGlobalState* state, std::list<AudioDevice*> * list);

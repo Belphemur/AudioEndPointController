@@ -8,14 +8,14 @@
 #include "Functiondiscoverykeys_devpkey.h"
 
 // Create a multimedia device enumerator.
-std::list<AudioDevice*> getAudioDevices(int deviceFilter)
+std::list<AudioDevice*>* getAudioDevices(int deviceFilter)
 {
 	TGlobalState state;
 	state.hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	state.deviceStateFilter = deviceFilter;
 	std::list<AudioDevice*> list;
 	createDeviceEnumerator(&state, &list);
-	return list;
+	return &list;
 }
 
 AUDIOENDPOINTCONTROLLER_API void createDeviceEnumerator(TGlobalState* state, std::list<AudioDevice*> * list)

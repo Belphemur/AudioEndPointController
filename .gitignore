@@ -1,5 +1,5 @@
 Debug
-EndPointController/Debug
-EndPointController/Release
 ipch
 *.sdf
+x64
+Release

@@ -32,3 +32,6 @@ A Windows command-line program for listing audio end-points and setting the defa
 AudioEndPointController C#
 ==========================
 This repository provides also a C# wrapper for the Native C++ dll.
+
+## License
+Under LGPLv3

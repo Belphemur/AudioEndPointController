@@ -8,12 +8,30 @@ using namespace System::Collections::Generic;
 
 namespace AudioEndPointControllerWrapper {
 
+	/*
+	#define DEVICE_STATE_ACTIVE      0x00000001
+	#define DEVICE_STATE_DISABLED    0x00000002
+	#define DEVICE_STATE_NOTPRESENT  0x00000004
+	#define DEVICE_STATE_UNPLUGGED   0x00000008
+	#define DEVICE_STATEMASK_ALL     0x0000000f
+	*/
+	[Flags]
+	public enum class DeviceState {
+		Active = DEVICE_STATE_ACTIVE,
+		Disabled = DEVICE_STATE_DISABLED,
+		NotPresent = DEVICE_STATE_NOTPRESENT,
+		Unplugged = DEVICE_STATE_UNPLUGGED,
+		All = DEVICE_STATEMASK_ALL
+	};
+
 	public ref class AudioController
 	{
 	public:
 		static List<AudioDeviceWrapper^>^ getAvailableAudioDevices();
 		static List<AudioDeviceWrapper^>^ getAllAudioDevices();
+		static  List<AudioDeviceWrapper^>^ getAudioDevices(DeviceState state);
 	private:
 		static List<AudioDeviceWrapper^>^ convertNativeList(std::list<AudioDevice*>* audioDeviceList);
 	};
+
 }

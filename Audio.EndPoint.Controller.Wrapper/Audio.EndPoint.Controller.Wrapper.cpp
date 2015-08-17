@@ -11,16 +11,17 @@ using namespace AudioEndPointControllerWrapper;
 
 List<AudioDeviceWrapper^>^ AudioEndPointControllerWrapper::AudioController::getAvailableAudioDevices()
 {
-	
-	std::list<AudioDevice*>* audioDeviceList = getAudioDevices(DEVICE_STATE_ACTIVE);
-	auto result = AudioController::convertNativeList(audioDeviceList);
-	delete audioDeviceList;
-	return result;
+	return AudioController::getAudioDevices(DeviceState::Active);
 }
 
 List<AudioDeviceWrapper^>^ AudioEndPointControllerWrapper::AudioController::getAllAudioDevices()
 {
-	std::list<AudioDevice*>* audioDeviceList = getAudioDevices(DEVICE_STATEMASK_ALL);
+	return AudioController::getAudioDevices(DeviceState::All);
+}
+
+List<AudioDeviceWrapper^>^ AudioEndPointControllerWrapper::AudioController::getAudioDevices(DeviceState state)
+{
+	std::list<AudioDevice*>* audioDeviceList = AudioEndPointerController::getAudioDevices((int)state);
 	auto result = AudioController::convertNativeList(audioDeviceList);
 	delete audioDeviceList;
 	return result;

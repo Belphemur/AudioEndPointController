@@ -28,3 +28,7 @@ A Windows command-line program for listing audio end-points and setting the defa
 					   - Device description (wstring)
 					   - Device interface friendly name (wstring)
 					   - Device ID (wstring)
+
+AudioEndPointController C#
+==========================
+This repository provides also a C# wrapper for the Native C++ dll.

@@ -86,7 +86,7 @@ int _tmain(int argc, LPCWSTR argv[])
 	if (SUCCEEDED(state.hr))
 	{
 		std::list<AudioDevice*> devices;
-		createDeviceEnumerator(&state, &devices);
+		AudioEndPointerController::createDeviceEnumerator(&state, &devices);
 		if(option < 1)
 		{
 			auto first = devices.begin();

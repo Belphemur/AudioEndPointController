@@ -5,7 +5,7 @@
 
 void AudioDevice::SetDefault()
 {
-	SetDefaultAudioPlaybackDevice(this->id);
+	AudioEndPointerController::SetDefaultAudioPlaybackDevice(this->id);
 }
 
 AudioDevice::AudioDevice()

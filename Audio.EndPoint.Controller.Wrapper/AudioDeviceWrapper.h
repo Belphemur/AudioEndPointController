@@ -53,6 +53,11 @@ namespace AudioEndPointControllerWrapper {
 			}
 		}
 
+		virtual String^ ToString() override
+		{
+			return FriendlyName;
+		}
+
 
 		void SetAsDefault();
 	};

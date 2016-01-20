@@ -29,6 +29,7 @@ int _tmain(int argc, LPCWSTR argv[])
 	state.strDefaultDeviceID = '\0';
 	state.deviceStateFilter = DEVICE_STATE_ACTIVE;
 
+	setlocale(LC_ALL, "");
 	for (int i = 1; i < argc; i++) 
 	{
 		if (wcscmp(argv[i], _T("--help")) == 0)
